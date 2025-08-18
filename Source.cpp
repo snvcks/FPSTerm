@@ -1,0 +1,80 @@
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+int nScreenWidth = 120;
+int nScreenHeight = 40;
+
+float fPlayerX = 0.0f;
+float fPlayerY = 0.0f;
+float fPlayerA = 0.0f;
+
+int nMapHeight = 16;
+int nMapWidth = 16;
+
+float fFOV = 3.1459/4.0;
+
+float fDepth = 16.0f;
+int main(){
+
+    std::cout << "Meow" << endl;
+
+    wstring map;
+
+    map += L"################";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"#..............#";
+    map += L"################";
+
+
+    //Game loop 
+
+    while(1){
+        for (int x = 0; x < nScreenWidth; x++){
+            //For each column, calc the projected ray angle into world space
+            float fRayAngle = (fPlayerA-fFOV/2.0f) + ((float)x/(float)nScreenWidth * fFOV);
+            
+            float fDistanceToWall = 0.0f;
+            bool bHitWall = false;
+
+            float fEyeX = sinf(fRayAngle); //unit vector for ray in player space
+            float fEyeY = cosf(fRayAngle);
+
+            while(!bHitWall fDistanceToWall < fDepth){
+            
+                fDistanceToWall += 0.1f;
+                
+                int nTestX = (int)(fPlayerX + fEyeX * fDistanceToWall);
+                int nTestY = (int)(fPlayerY + fEyeY * fDistanceToWall);
+
+
+                // test to see if out of depth
+                if( nTestX < 0 || nTestX >= nMapWidth || nTestY < 0 || nTestY >= nMapHeight){
+                    bHitWall = true; //set to max depth
+                    fDistanceToWall = fDepth;
+                }
+                else {
+                    if(map[nTestY*nMapWidth+nTestY] == '#'){
+                        bHitWall = true;
+                    }
+
+                }
+            }
+
+        }
+    }
+}
