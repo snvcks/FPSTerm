@@ -1,6 +1,8 @@
 
 #include <iostream>
 #include <string>
+#include <math.h>
+#include <ncurses.h>
 using namespace std;
 
 
@@ -54,7 +56,7 @@ int main(){
             float fEyeX = sinf(fRayAngle); //unit vector for ray in player space
             float fEyeY = cosf(fRayAngle);
 
-            while(!bHitWall fDistanceToWall < fDepth){
+            while(!bHitWall && fDistanceToWall < fDepth){
             
                 fDistanceToWall += 0.1f;
                 
@@ -72,6 +74,15 @@ int main(){
                         bHitWall = true;
                     }
 
+                }
+            }
+            //Calculate the distance from the ceiling and floor, potter algor
+            int nCeiling = (float)(nScreenHeight/2.0) - nScreenHeight/ ((float)fDistanceToWall);
+            int nFloor = nScreenHeight - nCeiling;
+
+            for (int y = 0; y< nScreenHeight; y++){
+
+                if (y <nCeiling ){
                 }
             }
 
