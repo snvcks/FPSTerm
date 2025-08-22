@@ -19,6 +19,7 @@ int nMapWidth = 16;
 float fFOV = 3.1459/4.0;
 
 float fDepth = 16.0f;
+
 int main(){
 
     wstring map;
@@ -46,6 +47,7 @@ int main(){
     while(1){
 
         initscr();
+        refresh();
         
         WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
 
@@ -86,19 +88,28 @@ int main(){
             for (int y = 0; y< nScreenHeight; y++){
 
                 if (y <nCeiling ){
-                    move(y*nScreenHeight,x);
+                    move(y,x);
                     wprintw(screen," ");
+                    wrefresh(screen);
                 }
-                else if (y > nCeiling && y <= nFloor)
-                    mvwprintw(screen,y*nScreenHeight,x,"#");
-                else
-                    mvwprintw(screen,y*nScreenHeight,x," ");
+                else if (y > nCeiling && y <= nFloor){
+                    mvwprintw(screen,y,x,"#");
+                    wrefresh(screen);
+                }
+                else{
+                    mvwprintw(screen,y,x," ");
+                    wrefresh(screen);
+                    
+                }
+
             }
 
         }
+        break;
     }
 
 
+    int c = getch();
     endwin();
 
     return 0;
