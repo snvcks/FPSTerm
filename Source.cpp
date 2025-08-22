@@ -83,28 +83,28 @@ int main(){
         
         //handle keyboard inputs 
         if (getch() == (int)'a'){
-            fPlayerA -= (0.3f) * fElapsedTime;
+            fPlayerA -= (0.8f) * fElapsedTime;
         }
         if (getch() == (int)'d'){
-            fPlayerA += (0.3f)* fElapsedTime;
+            fPlayerA += (0.8f)* fElapsedTime;
         }
 
         if(getch() == (int)'w'){
-            fPlayerX += sinf(fPlayerA) * 7.3f * fElapsedTime;
-            fPlayerY += cosf(fPlayerA) * 7.3f * fElapsedTime;
+            fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
 
-            if (((int) fPlayerY*nMapWidth + (int)fPlayerX) && map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
-                fPlayerX -= sinf(fPlayerA) * 7.3f * fElapsedTime;
-                fPlayerY -= cosf(fPlayerA) * 7.3f * fElapsedTime;
+            if (((int) fPlayerY*nMapWidth + (int)fPlayerX <= 0)||((int) fPlayerY*nMapWidth + (int)fPlayerX >= nMapWidth) && map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
+                fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
+                fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
             } 
         }
 
         if(getch() == (int)'s'){
-            fPlayerX -= sinf(fPlayerA) * 7.3f * fElapsedTime;
-            fPlayerY -= cosf(fPlayerA) * 7.3f * fElapsedTime;
-            if (((int) fPlayerY*nMapWidth + (int)fPlayerX) &&map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
-                fPlayerX += sinf(fPlayerA) * 7.3f * fElapsedTime;
-                fPlayerY += cosf(fPlayerA) * 7.3f * fElapsedTime;
+            fPlayerX -= sinf(fPlayerA) * 1.0f * fElapsedTime;
+            fPlayerY -= cosf(fPlayerA) * 1.0f * fElapsedTime;
+            if (((int) fPlayerY*nMapWidth + (int)fPlayerX <=0)||((int) fPlayerY*nMapWidth + (int)fPlayerX >= nMapWidth) &&map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
+                fPlayerX += sinf(fPlayerA) * 1.0f * fElapsedTime;
+                fPlayerY += cosf(fPlayerA) * 1.0f * fElapsedTime;
             } 
         }
 
