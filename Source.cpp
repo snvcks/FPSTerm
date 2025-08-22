@@ -9,8 +9,8 @@ using namespace std;
 int nScreenWidth = 120;
 int nScreenHeight = 40;
 
-float fPlayerX = 0.0f;
-float fPlayerY = 0.0f;
+float fPlayerX = 8.0f;
+float fPlayerY = 8.0f;
 float fPlayerA = 0.0f;
 
 int nMapHeight = 16;
@@ -46,6 +46,11 @@ int main(){
     //Game loop 
 
     while(1){
+
+        initscr();
+        
+        WINDOW screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
+
         for (int x = 0; x < nScreenWidth; x++){
             //For each column, calc the projected ray angle into world space
             float fRayAngle = (fPlayerA-fFOV/2.0f) + ((float)x/(float)nScreenWidth * fFOV);
@@ -83,9 +88,18 @@ int main(){
             for (int y = 0; y< nScreenHeight; y++){
 
                 if (y <nCeiling ){
+                    move(y*nScreenHeight,x);
+                    wprintw(screen," ");
                 }
+                else if (y > nCeiling && y <= nFloor)
+                    mvwprintw(screen,y*nScreenHeight,x,"#");
+                else
+                    mvwprintw(screen,y*nScreenHeight,x," ");
             }
 
         }
     }
+
+
+    endwin();
 }
