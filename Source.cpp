@@ -1,4 +1,6 @@
 
+#include <charconv>
+#include <chrono>
 #include <iostream>
 #include <string>
 #include <math.h>
@@ -20,6 +22,11 @@ float fFOV = 3.1459/4.0;
 
 float fDepth = 16.0f;
 
+const char closetWall = (char)61;
+const char closerWall = (char)47;
+const char closeWall = (char)45;
+const char wall= (char)35;
+
 int main(){
 
     wstring map;
@@ -30,34 +37,53 @@ int main(){
     map += L"#..............#";
     map += L"#..............#";
     map += L"#..............#";
+    map += L"#........####..#";
     map += L"#..............#";
-    map += L"#..............#";
-    map += L"#..............#";
-    map += L"#..............#";
-    map += L"#..............#";
+    map += L"#...#..........#";
+    map += L"#...#..........#";
+    map += L"#...#..........#";
     map += L"#..............#";
     map += L"#..............#";
     map += L"#..............#";
     map += L"#..............#";
     map += L"################";
 
+    
 
     //Game loop 
 
     initscr();
+    noecho();
     refresh();
     WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
 
+    auto tp1 = chrono::system_clock::now();
+    auto tp2 = chrono::system_clock::now();
+
     while(1){
+
+        tp2 = chrono::system_clock::now();
+        chrono::duration<float>elapsedTime =tp2 -tp1;
+        tp1 = tp2;
+        float fElapsedTime = elapsedTime.count();
 
         
         //handle keyboard inputs 
-        if (getch() == 97){
-            fPlayerA -= (0.1f);
+        if (getch() == (int)'a'){
+            fPlayerA -= (0.1f) * fElapsedTime;
+        }
+        if (getch() == (int)'d'){
+            fPlayerA += (0.1f)* fElapsedTime;
         }
 
-        if (getch() == 100){
-            fPlayerA += (0.1f);
+        if(getch() == (int)'w'){
+            fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+        }
+
+        if(getch() == (int)'s'){
+            fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
         }
 
 
@@ -95,6 +121,14 @@ int main(){
             int nCeiling = (float)(nScreenHeight/2.0) - nScreenHeight/ ((float)fDistanceToWall);
             int nFloor = nScreenHeight - nCeiling;
 
+            const char* nShade = " ";
+
+            if(fDistanceToWall <= fDepth /4.0f) nShade = &wall;
+            else if (fDistanceToWall < fDepth/3.0f) nShade = &closetWall;
+            else if (fDistanceToWall < fDepth /2.0f) nShade = &closerWall;
+            else if (fDistanceToWall < fDepth ) nShade = &closeWall;
+            else nShade = " ";
+
             for (int y = 0; y< nScreenHeight; y++){
 
                 if (y <nCeiling ){
@@ -103,7 +137,7 @@ int main(){
                     wrefresh(screen);
                 }
                 else if (y > nCeiling && y <= nFloor){
-                    mvwprintw(screen,y,x,"#");
+                    mvwprintw(screen,y,x,nShade);
                     wrefresh(screen);
                 }
                 else{

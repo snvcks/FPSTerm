@@ -14,9 +14,9 @@ int main()
 
     refresh();
     box(win,0,0);
-
-    mvwprintw(win,1,1,"my box");
     wrefresh(win);
+
+    wprintw(win,"my box");
 
     int c = getch();
 
