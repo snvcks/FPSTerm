@@ -1,4 +1,6 @@
-#include <algorithm>    // std::sort
+#include <algorithm>    
+#include <unistd.h>
+
 #include <charconv>
 #include <chrono>
 #include <iostream>
@@ -80,16 +82,17 @@ int main(){
         tp1 = tp2;
         float fElapsedTime = elapsedTime.count();
 
+        int characterHit = getch();
         
         //handle keyboard inputs 
-        if (getch() == (int)'a'){
+        if (characterHit == (int)'a'){
             fPlayerA -= (0.8f) * fElapsedTime;
         }
-        if (getch() == (int)'d'){
+        if (characterHit == (int)'d'){
             fPlayerA += (0.8f)* fElapsedTime;
         }
 
-        if(getch() == (int)'w'){
+        if(characterHit == (int)'w'){
             fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
             fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
 
@@ -99,7 +102,7 @@ int main(){
             } 
         }
 
-        if(getch() == (int)'s'){
+        if(characterHit == (int)'s'){
             fPlayerX -= sinf(fPlayerA) * 1.0f * fElapsedTime;
             fPlayerY -= cosf(fPlayerA) * 1.0f * fElapsedTime;
             if (((int) fPlayerY*nMapWidth + (int)fPlayerX <=0)||((int) fPlayerY*nMapWidth + (int)fPlayerX >= nMapWidth) &&map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
@@ -217,6 +220,9 @@ int main(){
         mvwprintw(screen, fPlayerY+1, fPlayerX+1,"P");
         wrefresh(screen);
         
+        unsigned int microseconds = 1000;
+
+        usleep(microseconds);
     }
 
 
