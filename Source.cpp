@@ -44,12 +44,22 @@ int main(){
 
     //Game loop 
 
+    initscr();
+    refresh();
+    WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
+
     while(1){
 
-        initscr();
-        refresh();
         
-        WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
+        //handle keyboard inputs 
+        if (getch() == 97){
+            fPlayerA -= (0.1f);
+        }
+
+        if (getch() == 100){
+            fPlayerA += (0.1f);
+        }
+
 
         for (int x = 0; x < nScreenWidth; x++){
             //For each column, calc the projected ray angle into world space
@@ -105,7 +115,6 @@ int main(){
             }
 
         }
-        break;
     }
 
 
