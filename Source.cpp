@@ -1,10 +1,12 @@
-
+#include <algorithm>    // std::sort
 #include <charconv>
 #include <chrono>
 #include <iostream>
 #include <string>
 #include <math.h>
 #include <ncurses.h>
+#include <utility>
+#include <vector>
 using namespace std;
 
 
@@ -26,6 +28,7 @@ const char closetWall = (char)61;
 const char closerWall = (char)47;
 const char closeWall = (char)45;
 const char wall= (char)35;
+const char boundry = ' ';
 
 const char ground = 'M';
 const char closetGround = 'x';
@@ -80,20 +83,29 @@ int main(){
         
         //handle keyboard inputs 
         if (getch() == (int)'a'){
-            fPlayerA -= (0.1f) * fElapsedTime;
+            fPlayerA -= (0.3f) * fElapsedTime;
         }
         if (getch() == (int)'d'){
-            fPlayerA += (0.1f)* fElapsedTime;
+            fPlayerA += (0.3f)* fElapsedTime;
         }
 
         if(getch() == (int)'w'){
-            fPlayerX += sinf(fPlayerA) * 5.0f * fElapsedTime;
-            fPlayerY += cosf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerX += sinf(fPlayerA) * 7.3f * fElapsedTime;
+            fPlayerY += cosf(fPlayerA) * 7.3f * fElapsedTime;
+
+            if (((int) fPlayerY*nMapWidth + (int)fPlayerX) && map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
+                fPlayerX -= sinf(fPlayerA) * 7.3f * fElapsedTime;
+                fPlayerY -= cosf(fPlayerA) * 7.3f * fElapsedTime;
+            } 
         }
 
         if(getch() == (int)'s'){
-            fPlayerX -= sinf(fPlayerA) * 5.0f * fElapsedTime;
-            fPlayerY -= cosf(fPlayerA) * 5.0f * fElapsedTime;
+            fPlayerX -= sinf(fPlayerA) * 7.3f * fElapsedTime;
+            fPlayerY -= cosf(fPlayerA) * 7.3f * fElapsedTime;
+            if (((int) fPlayerY*nMapWidth + (int)fPlayerX) &&map[(int)fPlayerY*nMapWidth + (int)fPlayerX] == '#'){
+                fPlayerX += sinf(fPlayerA) * 7.3f * fElapsedTime;
+                fPlayerY += cosf(fPlayerA) * 7.3f * fElapsedTime;
+            } 
         }
 
 
@@ -103,6 +115,7 @@ int main(){
             
             float fDistanceToWall = 0.0f;
             bool bHitWall = false;
+            bool bBoundry =false;
 
             float fEyeX = sinf(fRayAngle); //unit vector for ray in player space
             float fEyeY = cosf(fRayAngle);
@@ -123,6 +136,25 @@ int main(){
                 else {
                     if(map[nTestY*nMapWidth+nTestY] == '#'){
                         bHitWall = true;
+
+                        vector<pair<float,float>> p; //distance, dot 
+
+                        for (int tx = 0; tx <2;tx++){
+                            for( int ty= 0; ty< 2; ty++){
+                                float vy = (float)nTestY + ty - fPlayerY;
+
+                                float vx = (float)nTestX + tx - fPlayerX;
+                                float d = sqrt(vx*vx + vy*vy);
+                                float dot = (fEyeX * vx/d) + (fEyeY*vy/d);
+                                p.push_back(make_pair(d,dot));
+                            }
+                        }
+                        sort(p.begin(),p.end(),[](const pair<float,float> &left ,const pair<float,float> &right){ return left.first < right.first;});
+
+                        float fBound = 0.01;
+                        if(acos(p.at(0).second) < fBound) bBoundry = true;
+                        if(acos(p.at(1).second) < fBound) bBoundry = true;
+                        if(acos(p.at(2).second) < fBound) bBoundry = true;
                     }
 
                 }
@@ -137,9 +169,10 @@ int main(){
             else if (fDistanceToWall < fDepth/3.0f) nShade = &closetWall;
             else if (fDistanceToWall < fDepth /2.0f) nShade = &closerWall;
             else if (fDistanceToWall < fDepth ) nShade = &closeWall;
-            else nShade = " ";
+            else nShade = "`";
 
-
+        
+            if (bBoundry) nShade =&boundry; 
 
             for (int y = 0; y< nScreenHeight; y++){
 
@@ -170,6 +203,9 @@ int main(){
             }
 
         }
+        move(0,0);
+        clrtoeol();
+        mvwprintw(screen, 0, 0, "X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f ", fPlayerX,fPlayerY, fPlayerA, 1.0f/fElapsedTime);
     }
 
 
