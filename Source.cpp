@@ -203,9 +203,20 @@ int main(){
             }
 
         }
-        move(0,0);
-        clrtoeol();
         mvwprintw(screen, 0, 0, "X=%3.2f, Y=%3.2f, A=%3.2f, FPS=%3.2f ", fPlayerX,fPlayerY, fPlayerA, 1.0f/fElapsedTime);
+        wrefresh(screen);
+        //display map
+        for (int nx = 0;nx<nMapWidth;nx++){
+            for(int ny =0;ny<nMapHeight;ny++){
+                const char icon = map[ny*nMapWidth + nx];
+                mvwprintw(screen,ny+1,nx+1,&icon) ;
+                wrefresh(screen);
+            }
+        }
+
+        mvwprintw(screen, fPlayerY+1, fPlayerX+1,"P");
+        wrefresh(screen);
+        
     }
 
 
