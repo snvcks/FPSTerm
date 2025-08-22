@@ -21,8 +21,6 @@ float fFOV = 3.1459/4.0;
 float fDepth = 16.0f;
 int main(){
 
-    std::cout << "Meow" << endl;
-
     wstring map;
 
     map += L"################";
@@ -49,7 +47,7 @@ int main(){
 
         initscr();
         
-        WINDOW screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
+        WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
 
         for (int x = 0; x < nScreenWidth; x++){
             //For each column, calc the projected ray angle into world space
@@ -102,4 +100,6 @@ int main(){
 
 
     endwin();
+
+    return 0;
 }
