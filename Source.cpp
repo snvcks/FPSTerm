@@ -27,6 +27,13 @@ const char closerWall = (char)47;
 const char closeWall = (char)45;
 const char wall= (char)35;
 
+const char ground = 'M';
+const char closetGround = 'x';
+const char closeGround = '.';
+const char farGround = '-';
+const char furthestGround = ' ';
+
+
 int main(){
 
     wstring map;
@@ -34,13 +41,13 @@ int main(){
     map += L"################";
     map += L"#..............#";
     map += L"#..............#";
-    map += L"#..............#";
-    map += L"#..............#";
+    map += L"#....#.........#";
+    map += L"#...#..........#";
     map += L"#..............#";
     map += L"#........####..#";
     map += L"#..............#";
-    map += L"#...#..........#";
-    map += L"#...#..........#";
+    map += L"#...#.....#....#";
+    map += L"#...#.....#....#";
     map += L"#...#..........#";
     map += L"#..............#";
     map += L"#..............#";
@@ -56,7 +63,10 @@ int main(){
     noecho();
     refresh();
     WINDOW* screen = newwin(nScreenHeight, nScreenWidth, 0, 0);
+    
+    int board = (int)'0';
 
+    wborder(screen,board,board,board,board,board,board,board,board);
     auto tp1 = chrono::system_clock::now();
     auto tp2 = chrono::system_clock::now();
 
@@ -129,20 +139,31 @@ int main(){
             else if (fDistanceToWall < fDepth ) nShade = &closeWall;
             else nShade = " ";
 
+
+
             for (int y = 0; y< nScreenHeight; y++){
 
+                const char* groundShade = " ";
+                float b = 1.0f - (((float)y - nScreenHeight/2.0f) / ((float)nScreenHeight/2.0f));
+                if( b < 0.25f) groundShade = &ground;
+                else if(b <0.5) groundShade =&closetGround;
+                else if (b < 0.75) groundShade = &closeGround;
+                else if (b <0.9) groundShade = &farGround;
+                else groundShade = &furthestGround;
                 if (y <nCeiling ){
-                    move(y,x);
-                    wprintw(screen," ");
+                    mvwprintw(screen,y,x," ");
                     wrefresh(screen);
+                    refresh();
                 }
                 else if (y > nCeiling && y <= nFloor){
                     mvwprintw(screen,y,x,nShade);
+                    refresh();
                     wrefresh(screen);
                 }
                 else{
-                    mvwprintw(screen,y,x," ");
+                    mvwprintw(screen,y,x,groundShade);
                     wrefresh(screen);
+                    refresh();
                     
                 }
 
