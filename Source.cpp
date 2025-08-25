@@ -49,11 +49,11 @@ int main(){
     map += L"#....#.........#";
     map += L"#...#..........#";
     map += L"#..............#";
-    map += L"#........####..#";
-    map += L"#..............#";
+    map += L"#...###..####..#";
     map += L"#...#.....#....#";
     map += L"#...#.....#....#";
-    map += L"#...#..........#";
+    map += L"#...#.....#....#";
+    map += L"#...#######....#";
     map += L"#..............#";
     map += L"#..............#";
     map += L"#..............#";
@@ -220,7 +220,7 @@ int main(){
         mvwprintw(screen, fPlayerY+1, fPlayerX+1,"P");
         wrefresh(screen);
         
-        unsigned int microseconds = 1000;
+        unsigned int microseconds = 10000;
 
         usleep(microseconds);
     }
